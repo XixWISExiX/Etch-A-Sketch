@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+.gridContainer {
+  border: solid black 1px;
+}
+
 .rowGridContainer {
   display: flex;
 }
@@ -11,7 +15,6 @@
 .gridBlock {
   width: 16px;
   height: 16px;
-  /* padding: 16px; */
   border: solid black 1px;
   background: white;
 }

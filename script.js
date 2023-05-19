@@ -3,7 +3,11 @@
 
 import { body } from "./DOMref.js";
 
-// TODO abstract to functions for readability
+function application() {
+  grid();
+  drawOnBlock();
+}
+
 function grid() {
   const gridContainer = body.getElementsByClassName("gridContainer");
 
@@ -15,8 +19,32 @@ function grid() {
       const newDiv = document.createElement("div");
       newDiv.classList.add("gridBlock");
       rowGridContainer.appendChild(newDiv);
-      //   gridContainer[0].appendChild(newDiv);
     }
   }
+  const gridWidth = 16 * 16 + 16;
+  gridContainer[0].style.width = `${gridWidth}px`;
 }
-document.addEventListener("DOMContentLoaded", grid);
+
+function drawOnBlock() {
+  const gridBlocks = document.querySelectorAll(".gridBlock");
+  let isMouseDown = false;
+  gridBlocks.forEach((gridBlock) => {
+    gridBlock.addEventListener("mousedown", () => {
+      event.preventDefault();
+      isMouseDown = true;
+      gridBlock.style.backgroundColor = "black";
+    });
+
+    gridBlock.addEventListener("mouseup", () => {
+      isMouseDown = false;
+    });
+
+    gridBlock.addEventListener("mouseover", () => {
+      if (isMouseDown) {
+        gridBlock.style.backgroundColor = "black";
+      }
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", application);
