@@ -4,90 +4,166 @@ import {
   sliderValue,
   clear,
   rainbowColor,
-  normalColor,
+  blackColor,
   eraser,
+  grid,
 } from "./DOMref.js";
 
 function application() {
-  const DEFAULT_SIZE = 16;
-  let isRanbowColor = false;
+  sliderButton();
+  clearGridButton();
+  drawingOptions();
+  defaultGrid();
+}
+
+let drawing = (function () {
+  let isRainbowColor = false;
   let isEraser = false;
+
+  return {
+    getIsRainbowColor: function () {
+      return isRainbowColor;
+    },
+    setIsRainbowColor: function (value) {
+      isRainbowColor = value;
+    },
+    getIsEraser: function () {
+      return isEraser;
+    },
+    setIsEraser: function (value) {
+      isEraser = value;
+    },
+  };
+})();
+
+function sliderButton() {
   slider.addEventListener("input", () => {
     sliderValue.textContent = `${slider.value} x ${slider.value} grid`;
     clearGrid();
     gridConstruction(slider.value);
-    drawOnBlock(isRanbowColor);
+    drawOnBlock();
   });
-  clear[0].addEventListener("click", () => {
-    cleanGrid();
-  });
-  rainbowColor[0].addEventListener("click", () => {
-    isEraser = false;
-    isRanbowColor = true;
-    drawOnBlock(isRanbowColor, isEraser);
-  });
-  normalColor[0].addEventListener("click", () => {
-    isEraser = false;
-    isRanbowColor = false;
-    drawOnBlock(isRanbowColor, isEraser);
-  });
-  eraser[0].addEventListener("click", () => {
-    isEraser = true;
-    isRanbowColor = false;
-    drawOnBlock(isRanbowColor, isEraser);
-  });
-  gridConstruction(DEFAULT_SIZE);
-  drawOnBlock(isRanbowColor, isEraser);
 }
 
-function cleanGrid() {
+function clearGridButton() {
+  clear[0].addEventListener("click", () => {
+    makeEveryBlockWhiteInGrid();
+  });
+}
+
+function drawingOptions() {
+  rainbowColor[0].addEventListener("click", () => {
+    drawing.setIsEraser(false);
+    drawing.setIsRainbowColor(true);
+    drawOnBlock();
+  });
+  blackColor[0].addEventListener("click", () => {
+    drawing.setIsEraser(false);
+    drawing.setIsRainbowColor(false);
+    drawOnBlock();
+  });
+  eraser[0].addEventListener("click", () => {
+    drawing.setIsEraser(true);
+    drawing.setIsRainbowColor(false);
+    drawOnBlock();
+  });
+}
+
+function defaultGrid() {
+  gridConstruction(16);
+  drawOnBlock();
+}
+
+function clearGrid() {
+  const gridElements = body.querySelectorAll(".gridContainer");
+  gridElements.forEach((element) => element.parentNode.removeChild(element));
+}
+
+function makeEveryBlockWhiteInGrid() {
   const gridBlocks = document.querySelectorAll(".gridBlock");
   gridBlocks.forEach((gridBlock) => {
     gridBlock.style.backgroundColor = "white";
   });
 }
 
-function clearGrid() {
-  const gridElements = document.querySelectorAll(".gridContainer");
-  gridElements.forEach((element) => element.parentNode.removeChild(element));
+function gridConstruction(numberOfGridRows) {
+  const CONTAINER_SIZE = 650;
+  let gridContainer = gridContainerContstruction();
+  let blockInGridWidth = findOptimalBlockSize(CONTAINER_SIZE, numberOfGridRows);
+  gridRowConstruction(gridContainer, numberOfGridRows, blockInGridWidth);
+  let gridDimensions = blockInGridWidth * numberOfGridRows;
+  adjustGridContainerDimensions(gridContainer, gridDimensions);
 }
 
-function gridConstruction(blockWidth) {
-  const grid = body.getElementsByClassName("grid");
+function gridContainerContstruction() {
   const gridContainer = document.createElement("div");
   gridContainer.classList.add("gridContainer");
   grid[0].appendChild(gridContainer);
+  return gridContainer;
+}
 
-  let dimentions = 650 / blockWidth - 1;
-  for (let i = 0; i < blockWidth; i++) {
-    const rowGridContainer = document.createElement("div");
-    rowGridContainer.classList.add("rowGridContainer");
-    gridContainer.appendChild(rowGridContainer);
-    for (let j = 0; j < blockWidth; j++) {
-      const newDiv = document.createElement("div");
-      newDiv.classList.add("gridBlock");
-      newDiv.style.width = `${dimentions}px`;
-      newDiv.style.height = `${dimentions}px`;
-      newDiv.style.borderTop = `solid black 1px`;
-      newDiv.style.borderLeft = `solid black 1px`;
-      rowGridContainer.appendChild(newDiv);
-    }
+function findOptimalBlockSize(containerWidth, numberOfGridRows) {
+  return containerWidth / numberOfGridRows - 1;
+}
+
+function gridRowConstruction(
+  gridContainer,
+  numberOfGridRows,
+  blockInGridWidth
+) {
+  for (let i = 0; i < numberOfGridRows; i++) {
+    let rowGridContainer = addContainerToRow(gridContainer);
+    gridColumnConstruction(
+      rowGridContainer,
+      numberOfGridRows,
+      blockInGridWidth
+    );
   }
-  let gridDimentions = dimentions * blockWidth;
-  gridContainer.style.width = gridDimentions;
-  gridContainer.style.height = gridDimentions;
+}
+
+function addContainerToRow(gridContainer) {
+  const rowGridContainer = document.createElement("div");
+  rowGridContainer.classList.add("rowGridContainer");
+  gridContainer.appendChild(rowGridContainer);
+  return rowGridContainer;
+}
+
+function gridColumnConstruction(
+  rowGridContainer,
+  numberOfGridRows,
+  blockInGridWidth
+) {
+  for (let j = 0; j < numberOfGridRows; j++) {
+    let gridBlock = gridBlockConstruction(blockInGridWidth);
+    rowGridContainer.appendChild(gridBlock);
+  }
+}
+
+function gridBlockConstruction(blockInGridWidth) {
+  const gridBlock = document.createElement("div");
+  gridBlock.classList.add("gridBlock");
+  gridBlock.style.width = `${blockInGridWidth}px`;
+  gridBlock.style.height = `${blockInGridWidth}px`;
+  gridBlock.style.borderTop = `solid black 1px`;
+  gridBlock.style.borderLeft = `solid black 1px`;
+  return gridBlock;
+}
+
+function adjustGridContainerDimensions(gridContainer, gridDimensions) {
+  gridContainer.style.width = gridDimensions;
+  gridContainer.style.height = gridDimensions;
   gridContainer.style.borderBottom = "solid black 1px";
   gridContainer.style.borderRight = "solid black 1px";
 }
 
-function drawOnBlock(isRainbowColor, isEraser) {
+function drawOnBlock() {
   const gridBlocks = document.querySelectorAll(".gridBlock");
   let isMouseDown = false;
   gridBlocks.forEach((gridBlock) => {
     gridBlock.addEventListener("mousedown", () => {
       event.preventDefault();
       isMouseDown = true;
-      changeBlock(gridBlock, isRainbowColor, isEraser);
+      changeGridBlock(gridBlock);
     });
 
     gridBlock.addEventListener("mouseup", () => {
@@ -96,16 +172,16 @@ function drawOnBlock(isRainbowColor, isEraser) {
 
     gridBlock.addEventListener("mouseover", () => {
       if (isMouseDown) {
-        changeBlock(gridBlock, isRainbowColor, isEraser);
+        changeGridBlock(gridBlock);
       }
     });
   });
 }
 
-function changeBlock(gridBlock, isRainbowColor, isEraser) {
-  if (isRainbowColor) {
+function changeGridBlock(gridBlock) {
+  if (drawing.getIsRainbowColor()) {
     gridBlock.style.backgroundColor = getRandomRGBColor();
-  } else if (isEraser) {
+  } else if (drawing.getIsEraser()) {
     gridBlock.style.backgroundColor = "white";
   } else {
     gridBlock.style.backgroundColor = "black";
