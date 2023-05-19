@@ -5,11 +5,13 @@ import {
   clear,
   rainbowColor,
   normalColor,
+  eraser,
 } from "./DOMref.js";
 
 function application() {
   const DEFAULT_SIZE = 16;
   let isRanbowColor = false;
+  let isEraser = false;
   slider.addEventListener("input", () => {
     sliderValue.textContent = `${slider.value} x ${slider.value} grid`;
     clearGrid();
@@ -19,18 +21,23 @@ function application() {
   clear[0].addEventListener("click", () => {
     cleanGrid();
   });
-  // TODO add RGB color
   rainbowColor[0].addEventListener("click", () => {
+    isEraser = false;
     isRanbowColor = true;
-    drawOnBlock(isRanbowColor);
-    console.log(isRanbowColor);
+    drawOnBlock(isRanbowColor, isEraser);
   });
   normalColor[0].addEventListener("click", () => {
+    isEraser = false;
     isRanbowColor = false;
-    drawOnBlock(isRanbowColor);
+    drawOnBlock(isRanbowColor, isEraser);
+  });
+  eraser[0].addEventListener("click", () => {
+    isEraser = true;
+    isRanbowColor = false;
+    drawOnBlock(isRanbowColor, isEraser);
   });
   gridConstruction(DEFAULT_SIZE);
-  drawOnBlock(isRanbowColor);
+  drawOnBlock(isRanbowColor, isEraser);
 }
 
 function cleanGrid() {
@@ -73,18 +80,14 @@ function gridConstruction(blockWidth) {
   gridContainer.style.borderRight = "solid black 1px";
 }
 
-function drawOnBlock(isRainbowColor) {
+function drawOnBlock(isRainbowColor, isEraser) {
   const gridBlocks = document.querySelectorAll(".gridBlock");
   let isMouseDown = false;
   gridBlocks.forEach((gridBlock) => {
     gridBlock.addEventListener("mousedown", () => {
       event.preventDefault();
       isMouseDown = true;
-      if (isRainbowColor) {
-        gridBlock.style.backgroundColor = getRandomRGBColor();
-      } else {
-        gridBlock.style.backgroundColor = "black";
-      }
+      changeBlock(gridBlock, isRainbowColor, isEraser);
     });
 
     gridBlock.addEventListener("mouseup", () => {
@@ -93,14 +96,20 @@ function drawOnBlock(isRainbowColor) {
 
     gridBlock.addEventListener("mouseover", () => {
       if (isMouseDown) {
-        if (isRainbowColor) {
-          gridBlock.style.backgroundColor = getRandomRGBColor();
-        } else {
-          gridBlock.style.backgroundColor = "black";
-        }
+        changeBlock(gridBlock, isRainbowColor, isEraser);
       }
     });
   });
+}
+
+function changeBlock(gridBlock, isRainbowColor, isEraser) {
+  if (isRainbowColor) {
+    gridBlock.style.backgroundColor = getRandomRGBColor();
+  } else if (isEraser) {
+    gridBlock.style.backgroundColor = "white";
+  } else {
+    gridBlock.style.backgroundColor = "black";
+  }
 }
 
 function getRandomRGBColor() {
