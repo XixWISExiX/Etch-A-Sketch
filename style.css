@@ -5,16 +5,29 @@
 }
 
 .gridContainer {
-  border: solid black 1px;
+  /* width: 650px; */
+  /* height: 650px; */
+  /* border: solid black 1px; */
+  /* margin: auto; */
+  display: inline-block;
 }
 
 .rowGridContainer {
   display: flex;
+  /* width: 650px; */
 }
 
 .gridBlock {
-  width: 16px;
-  height: 16px;
-  border: solid black 1px;
+  /* width: 16px; */
+  /* height: 16px; */
+  /* border: solid black 1px; */
   background: white;
+}
+
+#slider {
+  width: 200px;
+}
+
+#sliderValue {
+  margin-left: 10px;
 }
