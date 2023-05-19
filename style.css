@@ -24,13 +24,18 @@
   background: white;
 }
 
+.optionsBar {
+  display: flex;
+  flex-direction: column;
+}
+
 .slider {
   display: flex;
   flex-direction: column;
 }
 
 #slider {
-  width: 80%;
+  width: 95%;
 }
 
 #sliderValue {

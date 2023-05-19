@@ -1,19 +1,36 @@
-// TODO add RGB color
-
-import { body, slider, sliderValue, clear } from "./DOMref.js";
+import {
+  body,
+  slider,
+  sliderValue,
+  clear,
+  rainbowColor,
+  normalColor,
+} from "./DOMref.js";
 
 function application() {
+  const DEFAULT_SIZE = 16;
+  let isRanbowColor = false;
   slider.addEventListener("input", () => {
     sliderValue.textContent = `${slider.value} x ${slider.value} grid`;
     clearGrid();
     gridConstruction(slider.value);
-    drawOnBlock();
+    drawOnBlock(isRanbowColor);
   });
   clear[0].addEventListener("click", () => {
     cleanGrid();
   });
-  gridConstruction(slider.value);
-  drawOnBlock();
+  // TODO add RGB color
+  rainbowColor[0].addEventListener("click", () => {
+    isRanbowColor = true;
+    drawOnBlock(isRanbowColor);
+    console.log(isRanbowColor);
+  });
+  normalColor[0].addEventListener("click", () => {
+    isRanbowColor = false;
+    drawOnBlock(isRanbowColor);
+  });
+  gridConstruction(DEFAULT_SIZE);
+  drawOnBlock(isRanbowColor);
 }
 
 function cleanGrid() {
@@ -29,7 +46,6 @@ function clearGrid() {
 }
 
 function gridConstruction(blockWidth) {
-  //   const gridContainer = body.getElementsByClassName("gridContainer");
   const grid = body.getElementsByClassName("grid");
   const gridContainer = document.createElement("div");
   gridContainer.classList.add("gridContainer");
@@ -57,14 +73,18 @@ function gridConstruction(blockWidth) {
   gridContainer.style.borderRight = "solid black 1px";
 }
 
-function drawOnBlock() {
+function drawOnBlock(isRainbowColor) {
   const gridBlocks = document.querySelectorAll(".gridBlock");
   let isMouseDown = false;
   gridBlocks.forEach((gridBlock) => {
     gridBlock.addEventListener("mousedown", () => {
       event.preventDefault();
       isMouseDown = true;
-      gridBlock.style.backgroundColor = "black";
+      if (isRainbowColor) {
+        gridBlock.style.backgroundColor = getRandomRGBColor();
+      } else {
+        gridBlock.style.backgroundColor = "black";
+      }
     });
 
     gridBlock.addEventListener("mouseup", () => {
@@ -73,10 +93,21 @@ function drawOnBlock() {
 
     gridBlock.addEventListener("mouseover", () => {
       if (isMouseDown) {
-        gridBlock.style.backgroundColor = "black";
+        if (isRainbowColor) {
+          gridBlock.style.backgroundColor = getRandomRGBColor();
+        } else {
+          gridBlock.style.backgroundColor = "black";
+        }
       }
     });
   });
+}
+
+function getRandomRGBColor() {
+  const red = Math.floor(Math.random() * 256);
+  const green = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
+  return `rgb(${red}, ${green}, ${blue})`;
 }
 
 document.addEventListener("DOMContentLoaded", application);
