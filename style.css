@@ -4,28 +4,33 @@
   padding: 0;
 }
 
+.header {
+  text-align: center;
+}
+
+.appContainer {
+  display: flex;
+}
+
 .gridContainer {
-  /* width: 650px; */
-  /* height: 650px; */
-  /* border: solid black 1px; */
-  /* margin: auto; */
   display: inline-block;
 }
 
 .rowGridContainer {
   display: flex;
-  /* width: 650px; */
 }
 
 .gridBlock {
-  /* width: 16px; */
-  /* height: 16px; */
-  /* border: solid black 1px; */
   background: white;
 }
 
+.slider {
+  display: flex;
+  flex-direction: column;
+}
+
 #slider {
-  width: 200px;
+  width: 80%;
 }
 
 #sliderValue {
