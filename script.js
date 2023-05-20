@@ -53,20 +53,30 @@ function clearGridButton() {
 
 function drawingOptions() {
   rainbowColor[0].addEventListener("click", () => {
+    resetButtons();
+    rainbowColor[0].style.backgroundColor = "#D0E8F2";
     drawing.setIsEraser(false);
     drawing.setIsRainbowColor(true);
     drawOnBlock();
   });
   blackColor[0].addEventListener("click", () => {
+    resetButtons();
     drawing.setIsEraser(false);
     drawing.setIsRainbowColor(false);
     drawOnBlock();
   });
   eraser[0].addEventListener("click", () => {
+    resetButtons();
     drawing.setIsEraser(true);
     drawing.setIsRainbowColor(false);
     drawOnBlock();
   });
+}
+
+function resetButtons() {
+  blackColor[0].style.backgroundColor = "white";
+  rainbowColor[0].style.backgroundColor = "white";
+  eraser[0].style.backgroundColor = "white";
 }
 
 function defaultGrid() {
