@@ -9,7 +9,6 @@
 }
 
 body {
-  /* background: #456268; */
   background: #79a3b1;
 }
 
@@ -29,6 +28,7 @@ body {
 .appContainer {
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .grid {
@@ -58,7 +58,7 @@ body {
 }
 
 .slider {
-  margin-top: 10px;
+  margin-top: 40px;
   display: flex;
   flex-direction: column;
 }
@@ -78,8 +78,9 @@ body {
   margin-top: 10px;
   border: solid black 1px;
   border-radius: 8px;
+  font-size: 16px;
   width: 200px;
-  height: 25px;
+  height: 30px;
 }
 
 .blackColor:hover,
@@ -88,10 +89,32 @@ body {
 .clear:hover {
   border: solid white 1px;
   background: #456268;
-  /* background: #79a3b1; */
   color: white;
-  width: 210px;
-  height: 26.25px;
+}
+
+.blackColor:active,
+.rainbowColor:active,
+.eraser:active,
+.clear:active {
+  border: solid white 1px;
+  background: #456268;
+  color: white;
+  width: 220px;
+  height: 33px;
+}
+
+.blackColor:focus,
+.rainbowColor:focus,
+.eraser:focus {
+  border: solid white 1px;
+  background: #456268;
+  color: white;
+}
+
+.active {
+  border: solid white 1px;
+  background: #456268;
+  color: white;
 }
 
 .footer {
